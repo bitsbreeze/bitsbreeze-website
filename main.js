@@ -2,8 +2,10 @@
 class BitsBreezeApp {
     constructor() {
         // Detect current language from page
-        const currentPage = window.location.pathname.split('/').pop();
-        this.currentLanguage = currentPage === 'index_en.html' ? 'en' : 'it';
+        const pathname = window.location.pathname;
+        const currentPage = pathname.split('/').pop() || 'index.html';
+        const isEnglish = currentPage === 'index_en.html' || pathname.includes('index_en');
+        this.currentLanguage = isEnglish ? 'en' : 'it';
         this.typedInstance = null;
         this.init();
     }
@@ -261,7 +263,9 @@ class BitsBreezeApp {
 
         languageSwitcher.addEventListener('change', (e) => {
             const newLanguage = e.target.value;
-            const currentPage = window.location.pathname.split('/').pop();
+            const pathname = window.location.pathname;
+            const currentPage = pathname.split('/').pop() || 'index.html';
+            const isEnglish = currentPage === 'index_en.html' || pathname.includes('index_en');
             
             // Update current language
             this.currentLanguage = newLanguage;
@@ -269,10 +273,13 @@ class BitsBreezeApp {
             // Update typed text immediately
             this.setupTypedText();
             
+            // Use relative paths for better GitHub Pages compatibility
             // Still redirect to maintain consistency with page content
-            if (newLanguage === 'en' && currentPage === 'index.html') {
+            if (newLanguage === 'en' && !isEnglish) {
+                // Switch to English - use relative path
                 window.location.href = 'index_en.html';
-            } else if (newLanguage === 'it' && currentPage === 'index_en.html') {
+            } else if (newLanguage === 'it' && isEnglish) {
+                // Switch to Italian - use relative path
                 window.location.href = 'index.html';
             }
         });
