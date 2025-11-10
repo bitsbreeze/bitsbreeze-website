@@ -262,25 +262,38 @@ class BitsBreezeApp {
         if (!languageSwitcher) return;
 
         languageSwitcher.addEventListener('change', (e) => {
+            e.preventDefault();
             const newLanguage = e.target.value;
             const pathname = window.location.pathname;
-            const currentPage = pathname.split('/').pop() || 'index.html';
-            const isEnglish = currentPage === 'index_en.html' || pathname.includes('index_en');
+            const currentPage = pathname.split('/').pop() || '';
+            const htmlLang = document.documentElement.getAttribute('lang');
             
-            // Update current language
-            this.currentLanguage = newLanguage;
+            // Better detection: check if we're on English page
+            const isEnglish = currentPage === 'index_en.html' || 
+                            pathname.includes('index_en') ||
+                            htmlLang === 'en';
             
-            // Update typed text immediately
-            this.setupTypedText();
-            
-            // Use relative paths for better GitHub Pages compatibility
-            // Still redirect to maintain consistency with page content
+            // Only redirect if language actually needs to change
             if (newLanguage === 'en' && !isEnglish) {
-                // Switch to English - use relative path
-                window.location.href = 'index_en.html';
+                // Switch to English
+                // Handle root case and subdirectory cases
+                if (pathname === '/' || currentPage === '' || currentPage === 'index.html') {
+                    window.location.href = './index_en.html';
+                } else {
+                    // Replace current filename with index_en.html
+                    const newPath = pathname.replace(/\/[^/]*$/, '/index_en.html').replace(/\/index\.html$/, '/index_en.html');
+                    window.location.href = newPath;
+                }
             } else if (newLanguage === 'it' && isEnglish) {
-                // Switch to Italian - use relative path
-                window.location.href = 'index.html';
+                // Switch to Italian
+                // Handle root case and subdirectory cases
+                if (pathname === '/' || currentPage === '' || currentPage === 'index_en.html') {
+                    window.location.href = './index.html';
+                } else {
+                    // Replace current filename with index.html
+                    const newPath = pathname.replace(/\/[^/]*$/, '/index.html').replace(/\/index_en\.html$/, '/index.html');
+                    window.location.href = newPath;
+                }
             }
         });
     }
