@@ -178,6 +178,50 @@
             transform: translateY(0);
             will-change: opacity, transform;
         }
+        
+        /* Mobile Menu Styles */
+        #mobileMenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        #mobileMenu.open {
+            max-height: 500px;
+        }
+        
+        .mobile-nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-nav-link:active {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .hero-bg h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.1 !important;
+            }
+            
+            .timeline-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .timeline-item .card-hover {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-item .card-hover {
+                width: 90% !important;
+                max-width: 320px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -208,12 +252,27 @@
                         </select>
                     </div>
                     
-                    <button class="md:hidden p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobileMenuButton" class="md:hidden p-2 text-gray-700 hover:text-gray-900" aria-label="Menu">
+                        <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-4 space-y-4">
+                <a href="#home" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Home</a>
+                <a href="#research" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Ricerca</a>
+                <a href="#technology" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Tecnologia</a>
+                <a href="#publications" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Pubblicazioni</a>
+                <a href="#partnerships" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Partnership</a>
+                <a href="#contact" class="block text-gray-700 hover:text-gray-900 font-medium py-2 mobile-nav-link">Contatti</a>
             </div>
         </div>
     </nav>
@@ -290,7 +349,7 @@
                         <!-- Timeline Item 1 -->
                         <div class="timeline-item flex flex-col items-center cursor-pointer" data-year="2024">
                             <div class="timeline-node mb-4"></div>
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 card-hover">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-full sm:w-80 card-hover">
                                 <div class="text-2xl font-bold text-gray-900 mb-2">2024</div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">Fondazione BitsBreeze</h3>
                                 <p class="text-gray-600 text-sm">
@@ -303,7 +362,7 @@
                         <div class="timeline-line w-32"></div>
                         <div class="timeline-item flex flex-col items-center cursor-pointer" data-year="2025">
                             <div class="timeline-node mb-4"></div>
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 card-hover">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-full sm:w-80 card-hover">
                                 <div class="text-2xl font-bold text-gray-900 mb-2">2025</div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">Partnership Strategiche</h3>
                                 <p class="text-gray-600 text-sm">
@@ -316,7 +375,7 @@
                         <div class="timeline-line w-32"></div>
                         <div class="timeline-item flex flex-col items-center cursor-pointer" data-year="2026">
                             <div class="timeline-node mb-4"></div>
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 card-hover">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-full sm:w-80 card-hover">
                                 <div class="text-2xl font-bold text-gray-900 mb-2">2026</div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">Validazione Sperimentale</h3>
                                 <p class="text-gray-600 text-sm">
@@ -329,7 +388,7 @@
                         <div class="timeline-line w-32"></div>
                         <div class="timeline-item flex flex-col items-center cursor-pointer" data-year="2027">
                             <div class="timeline-node mb-4"></div>
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 card-hover">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-full sm:w-80 card-hover">
                                 <div class="text-2xl font-bold text-gray-900 mb-2">2027</div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">Commercializzazione</h3>
                                 <p class="text-gray-600 text-sm">
