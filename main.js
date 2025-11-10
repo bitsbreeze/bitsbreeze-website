@@ -98,10 +98,11 @@ class BitsBreezeApp {
         window.addEventListener('resize', initParticles);
     }
 
-    // Typed Text Animation - Modern fade/slide effect
+    // Typed Text Animation - Smooth crossfade effect
     setupTypedText() {
         const typedElement = document.getElementById('typed-text');
-        if (!typedElement) return;
+        const typedElementNext = document.getElementById('typed-text-next');
+        if (!typedElement || !typedElementNext) return;
 
         // Clear any existing interval
         if (this.textAnimationInterval) {
@@ -122,41 +123,53 @@ class BitsBreezeApp {
         ];
 
         let currentIndex = 0;
+        let isAnimating = false;
         
-        // Function to animate text change
+        // Function to animate text change with smooth crossfade
         const animateTextChange = () => {
-            const currentMessage = messages[currentIndex];
+            if (isAnimating) return;
+            isAnimating = true;
             
-            // Fade out and slide up
-            anime({
+            const nextIndex = (currentIndex + 1) % messages.length;
+            const nextMessage = messages[nextIndex];
+            
+            // Set next text
+            typedElementNext.textContent = nextMessage;
+            
+            // Smooth crossfade animation
+            anime.timeline({
+                easing: 'easeInOutQuad',
+                complete: () => {
+                    // Swap elements
+                    typedElement.textContent = nextMessage;
+                    typedElement.style.opacity = '1';
+                    typedElement.style.transform = 'translateY(0)';
+                    typedElementNext.style.opacity = '0';
+                    typedElementNext.style.transform = 'translateY(0)';
+                    currentIndex = nextIndex;
+                    isAnimating = false;
+                }
+            })
+            .add({
                 targets: typedElement,
                 opacity: [1, 0],
-                translateY: [0, -20],
-                duration: 400,
-                easing: 'easeInQuad',
-                complete: () => {
-                    // Change text
-                    typedElement.textContent = currentMessage;
-                    
-                    // Fade in and slide down
-                    anime({
-                        targets: typedElement,
-                        opacity: [0, 1],
-                        translateY: [20, 0],
-                        duration: 600,
-                        easing: 'easeOutQuad'
-                    });
-                }
-            });
-            
-            // Move to next message
-            currentIndex = (currentIndex + 1) % messages.length;
+                duration: 500,
+                easing: 'easeInQuad'
+            })
+            .add({
+                targets: typedElementNext,
+                opacity: [0, 1],
+                duration: 500,
+                easing: 'easeOutQuad'
+            }, '-=250'); // Overlap animations for smoother transition
         };
 
         // Set initial text
         typedElement.textContent = messages[0];
         typedElement.style.opacity = '1';
         typedElement.style.transform = 'translateY(0)';
+        typedElementNext.style.opacity = '0';
+        typedElementNext.style.transform = 'translateY(0)';
         
         // Start animation after initial delay
         setTimeout(() => {
