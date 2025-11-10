@@ -6,7 +6,7 @@ class BitsBreezeApp {
         const currentPage = pathname.split('/').pop() || 'index.html';
         const isEnglish = currentPage === 'index_en.html' || pathname.includes('index_en');
         this.currentLanguage = isEnglish ? 'en' : 'it';
-        this.typedInstance = null;
+        this.textAnimationInterval = null;
         this.init();
     }
 
@@ -97,15 +97,15 @@ class BitsBreezeApp {
         window.addEventListener('resize', initParticles);
     }
 
-    // Typed Text Animation
+    // Typed Text Animation - Modern fade/slide effect
     setupTypedText() {
         const typedElement = document.getElementById('typed-text');
         if (!typedElement) return;
 
-        // Destroy existing instance if any
-        if (this.typedInstance) {
-            this.typedInstance.destroy();
-            this.typedInstance = null;
+        // Clear any existing interval
+        if (this.textAnimationInterval) {
+            clearInterval(this.textAnimationInterval);
+            this.textAnimationInterval = null;
         }
 
         const messages = this.currentLanguage === 'it' ? [
@@ -120,25 +120,48 @@ class BitsBreezeApp {
             'We build the future of sustainable energy'
         ];
 
-        // Clear the element
-        typedElement.innerHTML = '';
+        let currentIndex = 0;
         
-        // Add smooth transition classes
-        typedElement.classList.add('typed-text-container', 'fade-in');
+        // Function to animate text change
+        const animateTextChange = () => {
+            const currentMessage = messages[currentIndex];
+            
+            // Fade out and slide up
+            anime({
+                targets: typedElement,
+                opacity: [1, 0],
+                translateY: [0, -20],
+                duration: 400,
+                easing: 'easeInQuad',
+                complete: () => {
+                    // Change text
+                    typedElement.textContent = currentMessage;
+                    
+                    // Fade in and slide down
+                    anime({
+                        targets: typedElement,
+                        opacity: [0, 1],
+                        translateY: [20, 0],
+                        duration: 600,
+                        easing: 'easeOutQuad'
+                    });
+                }
+            });
+            
+            // Move to next message
+            currentIndex = (currentIndex + 1) % messages.length;
+        };
 
-        // Create typed instance with optimized settings for smooth transitions
-        this.typedInstance = new Typed('#typed-text', {
-            strings: messages,
-            typeSpeed: 50,
-            backSpeed: 30,
-            backDelay: 2000,
-            startDelay: 500,
-            loop: true,
-            showCursor: true,
-            cursorChar: '|',
-            smartBackspace: true,
-            shuffle: false
-        });
+        // Set initial text
+        typedElement.textContent = messages[0];
+        typedElement.style.opacity = '1';
+        typedElement.style.transform = 'translateY(0)';
+        
+        // Start animation after initial delay
+        setTimeout(() => {
+            // Change text every 4 seconds
+            this.textAnimationInterval = setInterval(animateTextChange, 4000);
+        }, 2000);
     }
 
     // Scroll Animations

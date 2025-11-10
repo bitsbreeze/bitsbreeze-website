@@ -168,19 +168,15 @@
         
         .typed-text-container {
             display: inline-block;
-            transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
             min-width: 1px;
-            will-change: opacity;
         }
         
         #typed-text {
             display: inline-block;
             vertical-align: middle;
-        }
-        
-        /* Smooth container transition */
-        #typed-text + .typed-cursor {
-            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+            will-change: opacity, transform;
         }
     </style>
 </head>
